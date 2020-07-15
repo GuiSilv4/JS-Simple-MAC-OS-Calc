@@ -1,0 +1,166 @@
+<html>
+<head>
+	<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;400&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<title>Calculadora</title>
+</head>
+<body>
+<script type="text/javascript">
+	var Accum = 0;
+	var FlagNewNum = false;
+	var PendingOp = "";	
+
+	//Abaixo estamos adcionando os valores de cada botão ao parametro Num
+	function NumPressed(Num) {
+		if (FlagNewNum) {
+			document.frm_calc.txt_01.value  = Num;
+			FlagNewNum = false;
+   		}
+		else {
+			if (document.frm_calc.txt_01.value == "0")
+				document.frm_calc.txt_01.value = Num;
+			else
+				document.frm_calc.txt_01.value += Num;
+   		}
+   		document.getElementById("btn_igual").focus();
+	}
+
+	//Calculo do iva
+	function calcIVA(Op) {
+		let resultado = 0;
+		if (document.frm_calc.txt_01.value == ""){
+			alert("O Campo esta vázio digite um valor");
+			document.frm_calc.txt_01.value ="0"; }
+		else{
+			if(Op === "+") 
+				resultado = document.frm_calc.txt_01.value * 1.23;
+			else resultado = document.frm_calc.txt_01.value / 1.23;
+
+			document.frm_calc.txt_01.value = resultado;
+			PendingOp = "=";
+		}
+
+		document.getElementById("btn_igual").focus();
+	}
+
+	//Valores de exibição quando apertado o botão igual
+	function Operation(Op) {
+		if (document.frm_calc.txt_01.value == ""){
+			alert("O Campo esta vázio digite um valor");
+			document.frm_calc.txt_01.value = "0"; }
+		else{
+			if (FlagNewNum && PendingOp != "=");
+			else	{
+				FlagNewNum = true;
+				if ( '+' == PendingOp )
+					Accum += parseFloat(document.frm_calc.txt_01.value);
+					else if ( '-' == PendingOp )
+					Accum -= parseFloat(document.frm_calc.txt_01.value);
+					else if ( '/' == PendingOp )
+					Accum /= parseFloat(document.frm_calc.txt_01.value);
+					else if ( '*' == PendingOp )
+					Accum *= parseFloat(document.frm_calc.txt_01.value);
+				else
+					Accum = parseFloat(document.frm_calc.txt_01.value);
+					document.frm_calc.txt_01.value = Accum;
+					PendingOp = Op;
+			}
+   		}
+
+   		document.getElementById("btn_igual").focus();
+	}
+
+	//Atribuindo o ponto( . ) aos valores numéricos
+	function Ponto() {
+		var curtxt_01 = document.frm_calc.txt_01.value;
+		if (FlagNewNum) {
+			curtxt_01 = "0.";
+			FlagNewNum = false;
+   		}
+		else {
+		if (curtxt_01.indexOf(".") == -1)
+			curtxt_01 += ".";
+   		}
+		document.frm_calc.txt_01.value = curtxt_01;
+
+		document.getElementById("btn_igual").focus();
+	}
+
+	function clearScreen(){
+		this.blur();
+		Accum = 0;
+		FlagNewNum = false;
+		PendingOp = "";	
+		document.frm_calc.txt_01.value = "0";
+ 		document.getElementById("btn_igual").focus();
+	}
+
+</script>
+<form name="frm_calc">
+
+<center>
+<div class="container">
+	<div>
+		<input class="screen result" type="text" name="txt_01" value="0" readonly>
+	</div>
+	<div class="buttons">
+
+		<input type="button" value="AC" onclick="clearScreen()" class="toggles">
+
+		<input type="button" value="+IVA" onclick="calcIVA('+')" class="toggles">
+
+		<input type="button" value="-IVA" onclick="calcIVA('-')" class="toggles">
+
+		<input type="button" value="÷" name="btn_divi" onclick="Operation('/')" class="operators" >
+
+		<input type="button" value="7" name="btn_7" onclick="NumPressed(7)">
+		<input type="button" value="8" name="btn_8" onclick="NumPressed(8)">
+		<input type="button" value="9" name="btn_9" onclick="NumPressed(9)">
+		<input type="button" value="x" name="btn_mult" onclick="Operation('*')" class="operators" >
+		
+		<input type="button" value="4" name="btn_4" onclick="NumPressed(4)">
+		<input type="button" value="5" name="btn_5" onclick="NumPressed(5)">
+		<input type="button" value="6" name="btn_6" onclick="NumPressed(6)">
+		<input type="button" value="-" name="btn_subt" onclick="Operation('-')" class="operators">
+
+		<input type="button" value="1" name="btn_1" onclick="NumPressed(1)">
+		<input type="button" value="2" name="btn_2" onclick="NumPressed(2)">
+		<input type="button" value="3" name="btn_3" onclick="NumPressed(3)">
+		<input type="button" value="+" name="btn_soma" onclick="Operation('+')" class="operators">
+		
+		<input type="button" value="0" name="btn_0" onclick="NumPressed(0)" style="width: 200px;">
+		<input type="button" value="." name="btn_pont" onclick="Ponto()">
+		<input type="button" value="=" name="btn_igual" id="btn_igual" onclick="Operation('=')" class="operators">
+	</div>
+</div>
+</form></center>
+<script type="text/javascript">
+
+	document.addEventListener('keyup', (e) => {
+		console.log(e.code);
+		switch (e.code) {
+			case 'Numpad1': NumPressed(1); break;
+			case 'Numpad2': NumPressed(2); break;
+			case 'Numpad3': NumPressed(3); break;
+			case 'Numpad4': NumPressed(4); break;
+			case 'Numpad5': NumPressed(5); break;
+			case 'Numpad6': NumPressed(6); break;
+			case 'Numpad7': NumPressed(7); break;
+			case 'Numpad8': NumPressed(8); break;
+			case 'Numpad9': NumPressed(9); break;
+			case 'Numpad0': NumPressed(0); break;
+			case 'NumpadDecimal':Ponto(); break;
+			case 'NumpadAdd': Operation('+'); break;
+			case 'NumpadSubstract': Operation('-'); break;
+			case 'NumpadMultiply': Operation('*'); break;
+			case 'NumpadDivide': Operation('/'); break;
+			case 'NumpadEnter': Operation('='); break;
+			case 'KeyI': calcIVA('+'); break;
+			case 'KeyO': calcIVA('-'); break;
+			case 'Delete': clearScreen(); break;
+		}
+	});
+
+</script>
+</body>
+</html>
