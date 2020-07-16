@@ -95,6 +95,15 @@
  		document.getElementById("btn_igual").focus();
 	}
 
+	function backspace(){
+		let text = document.frm_calc.txt_01.value.slice(0, -1);
+
+		if(text == '') text = '0';
+		
+		document.frm_calc.txt_01.value = text;
+
+	}
+
 </script>
 <form name="frm_calc">
 
@@ -151,13 +160,14 @@
 			case 'Numpad0': NumPressed(0); break;
 			case 'NumpadDecimal':Ponto(); break;
 			case 'NumpadAdd': Operation('+'); break;
-			case 'NumpadSubstract': Operation('-'); break;
+			case 'NumpadSubtract': Operation('-'); break;
 			case 'NumpadMultiply': Operation('*'); break;
 			case 'NumpadDivide': Operation('/'); break;
 			case 'NumpadEnter': Operation('='); break;
 			case 'KeyI': calcIVA('+'); break;
 			case 'KeyO': calcIVA('-'); break;
 			case 'Delete': clearScreen(); break;
+			case 'Backspace': backspace(); break;
 		}
 	});
 
