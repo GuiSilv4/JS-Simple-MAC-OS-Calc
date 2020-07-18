@@ -12,6 +12,7 @@
 
 	//Abaixo estamos adcionando os valores de cada botão ao parametro Num
 	function NumPressed(Num) {
+
 		if (FlagNewNum) {
 			document.frm_calc.txt_01.value  = Num;
 			FlagNewNum = false;
@@ -23,10 +24,12 @@
 				document.frm_calc.txt_01.value += Num;
    		}
    		document.getElementById("btn_igual").focus();
+
 	}
 
 	//Calculo do iva
 	function calcIVA(Op) {
+
 		let resultado = 0;
 		if (document.frm_calc.txt_01.value == ""){
 			alert("O Campo esta vázio digite um valor");
@@ -41,10 +44,12 @@
 		}
 
 		document.getElementById("btn_igual").focus();
+
 	}
 
 	//Valores de exibição quando apertado o botão igual
 	function Operation(Op) {
+
 		if (document.frm_calc.txt_01.value == ""){
 			alert("O Campo esta vázio digite um valor");
 			document.frm_calc.txt_01.value = "0"; }
@@ -99,9 +104,35 @@
 		let text = document.frm_calc.txt_01.value.slice(0, -1);
 
 		if(text == '') text = '0';
-		
+
 		document.frm_calc.txt_01.value = text;
 
+	}
+
+	function calcDisplay(){
+		if (document.frm_calc.txt_01.value == ""){
+			alert("O Campo esta vázio digite um valor");
+			document.frm_calc.txt_01.value = "0"; }
+		else{
+			const value = parseFloat(document.frm_calc.txt_01.value);
+			let result = 0;
+
+			if (value < 50) {
+				result = ( value + 25 ) * 1.23;
+			} else if ( value >= 50 && value < 70){
+				result = ( value + 50 );
+			} else if ( value >= 70 && value < 100) {
+				result = ( value + 50 ) * 1.23;
+			} else if ( value > 100) {
+				result = "Consulta";
+			}
+
+			Accum = 0;
+			FlagNewNum = false;
+			PendingOp = "";	
+			document.frm_calc.txt_01.value = result;
+			document.getElementById("btn_igual").focus();
+		}
 	}
 
 </script>
@@ -114,11 +145,11 @@
 	</div>
 	<div class="buttons">
 
-		<input type="button" value="AC" onclick="clearScreen()" class="toggles">
+		<input type="button" value="AC" name="btn_reset"  onclick="clearScreen()" class="toggles">
 
-		<input type="button" value="+IVA" onclick="calcIVA('+')" class="toggles">
+		<input type="button" value="+IVA" name="btn_plusIva"  onclick="calcIVA('+')" class="toggles">
 
-		<input type="button" value="-IVA" onclick="calcIVA('-')" class="toggles">
+		<input type="button" value="-IVA" name="btn_minusIva"  onclick="calcIVA('-')" class="toggles">
 
 		<input type="button" value="÷" name="btn_divi" onclick="Operation('/')" class="operators" >
 
@@ -137,7 +168,9 @@
 		<input type="button" value="3" name="btn_3" onclick="NumPressed(3)">
 		<input type="button" value="+" name="btn_soma" onclick="Operation('+')" class="operators">
 		
-		<input type="button" value="0" name="btn_0" onclick="NumPressed(0)" style="width: 200px;">
+		<input type="button" value="Disp" name="btn_disp" onclick="calcDisplay()">
+		<input type="button" value="0" name="btn_0" onclick="NumPressed(0)">
+		
 		<input type="button" value="." name="btn_pont" onclick="Ponto()">
 		<input type="button" value="=" name="btn_igual" id="btn_igual" onclick="Operation('=')" class="operators">
 	</div>
@@ -145,29 +178,55 @@
 </form></center>
 <script type="text/javascript">
 
+	document.addEventListener('keydown', (e) => {
+		switch (e.code) {
+			case 'Numpad1':        document.frm_calc.btn_1.classList.add("button-active"); break;
+			case 'Numpad2':        document.frm_calc.btn_2.classList.add("button-active"); break;
+			case 'Numpad3':        document.frm_calc.btn_3.classList.add("button-active"); break;
+			case 'Numpad4':        document.frm_calc.btn_4.classList.add("button-active"); break;
+			case 'Numpad5':        document.frm_calc.btn_5.classList.add("button-active"); break;
+			case 'Numpad6':        document.frm_calc.btn_6.classList.add("button-active"); break;
+			case 'Numpad7':        document.frm_calc.btn_7.classList.add("button-active"); break;
+			case 'Numpad8':        document.frm_calc.btn_8.classList.add("button-active"); break;
+			case 'Numpad9':        document.frm_calc.btn_9.classList.add("button-active"); break;
+			case 'Numpad0':        document.frm_calc.btn_0.classList.add("button-active"); break;
+			case 'NumpadDecimal':  document.frm_calc.btn_pont.classList.add("button-active"); break;
+			case 'NumpadAdd':      document.frm_calc.btn_soma.classList.add("button-active"); break;
+			case 'NumpadSubtract': document.frm_calc.btn_subt.classList.add("button-active"); break;
+			case 'NumpadMultiply': document.frm_calc.btn_mult.classList.add("button-active"); break;
+			case 'NumpadDivide':   document.frm_calc.btn_divi.classList.add("button-active"); break;
+			case 'NumpadEnter':    document.frm_calc.btn_igual.classList.add("button-active"); break;
+			case 'KeyI':           document.frm_calc.btn_plusIva.classList.add("button-active"); break;
+			case 'KeyO':           document.frm_calc.btn_minusIva.classList.add("button-active"); break;
+			case 'Delete':         document.frm_calc.btn_reset.classList.add("button-active"); break;
+			case 'KeyD':           document.frm_calc.btn_disp.classList.add("button-active"); break;
+		}
+	});
+
 	document.addEventListener('keyup', (e) => {
 		console.log(e.code);
 		switch (e.code) {
-			case 'Numpad1': NumPressed(1); break;
-			case 'Numpad2': NumPressed(2); break;
-			case 'Numpad3': NumPressed(3); break;
-			case 'Numpad4': NumPressed(4); break;
-			case 'Numpad5': NumPressed(5); break;
-			case 'Numpad6': NumPressed(6); break;
-			case 'Numpad7': NumPressed(7); break;
-			case 'Numpad8': NumPressed(8); break;
-			case 'Numpad9': NumPressed(9); break;
-			case 'Numpad0': NumPressed(0); break;
-			case 'NumpadDecimal':Ponto(); break;
-			case 'NumpadAdd': Operation('+'); break;
-			case 'NumpadSubtract': Operation('-'); break;
-			case 'NumpadMultiply': Operation('*'); break;
-			case 'NumpadDivide': Operation('/'); break;
-			case 'NumpadEnter': Operation('='); break;
-			case 'KeyI': calcIVA('+'); break;
-			case 'KeyO': calcIVA('-'); break;
-			case 'Delete': clearScreen(); break;
-			case 'Backspace': backspace(); break;
+			case 'Numpad1':         document.frm_calc.btn_1.click(); document.frm_calc.btn_1.classList.toggle("button-active"); break;
+			case 'Numpad2':         document.frm_calc.btn_2.click(); document.frm_calc.btn_2.classList.toggle("button-active"); break;
+			case 'Numpad3':         document.frm_calc.btn_3.click(); document.frm_calc.btn_3.classList.toggle("button-active"); break;
+			case 'Numpad4':         document.frm_calc.btn_4.click(); document.frm_calc.btn_4.classList.toggle("button-active"); break;
+			case 'Numpad5':         document.frm_calc.btn_5.click(); document.frm_calc.btn_5.classList.toggle("button-active"); break;
+			case 'Numpad6':         document.frm_calc.btn_6.click(); document.frm_calc.btn_6.classList.toggle("button-active"); break;
+			case 'Numpad7':         document.frm_calc.btn_7.click(); document.frm_calc.btn_7.classList.toggle("button-active"); break;
+			case 'Numpad8':         document.frm_calc.btn_8.click(); document.frm_calc.btn_8.classList.toggle("button-active"); break;
+			case 'Numpad9':         document.frm_calc.btn_9.click(); document.frm_calc.btn_9.classList.toggle("button-active"); break;
+			case 'Numpad0':         document.frm_calc.btn_0.click(); document.frm_calc.btn_0.classList.toggle("button-active"); break;
+			case 'NumpadDecimal':   document.frm_calc.btn_pont.click(); document.frm_calc.btn_pont.classList.toggle("button-active"); break;
+			case 'NumpadAdd':       document.frm_calc.btn_soma.click(); document.frm_calc.btn_soma.classList.toggle("button-active"); break;
+			case 'NumpadSubtract':  document.frm_calc.btn_subt.click(); document.frm_calc.btn_subt.classList.toggle("button-active"); break;
+			case 'NumpadMultiply':  document.frm_calc.btn_mult.click(); document.frm_calc.btn_mult.classList.toggle("button-active"); break;
+			case 'NumpadDivide':    document.frm_calc.btn_divi.click(); document.frm_calc.btn_divi.classList.toggle("button-active");  break;
+			case 'NumpadEnter':     document.frm_calc.btn_igual.click(); document.frm_calc.btn_igual.classList.toggle("button-active"); break;
+			case 'KeyI':            document.frm_calc.btn_plusIva.click(); document.frm_calc.btn_plusIva.classList.toggle("button-active"); break;
+			case 'KeyO':            document.frm_calc.btn_minusIva.click(); document.frm_calc.btn_minusIva.classList.toggle("button-active"); break;
+			case 'Delete':          document.frm_calc.btn_reset.click(); document.frm_calc.btn_reset.classList.toggle("button-active"); break;
+			case 'Backspace':       backspace(); break;
+			case 'KeyD':            document.frm_calc.btn_disp.click(); document.frm_calc.btn_disp.classList.toggle("button-active"); break;
 		}
 	});
 
